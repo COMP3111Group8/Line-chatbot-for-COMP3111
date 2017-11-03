@@ -383,7 +383,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Exception happens!");
 		}
 
 		if(user instanceof DetailedUser) {
