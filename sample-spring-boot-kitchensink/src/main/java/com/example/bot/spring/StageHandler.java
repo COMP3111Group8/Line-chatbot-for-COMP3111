@@ -248,8 +248,10 @@ public class StageHandler {
 			}break;
 			case "6" :{
 				if(!CouponWarehouse.isCampaignStarted()){
-					MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
-					replymsg = replyinfo.getMsg();
+					String replyinfo =  CouponWarehouse.startCampaign();
+					ArrayList<String> alluids = CouponWarehouse.getInstance().getNotifiableObservers(replyinfo).getData();
+					replymsg = "@@" + replyinfo;
+					for(String uid:alluids) replymsg += "@@" + uid;
 				}
 				else{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 				currentUser.setStage("Main");
@@ -257,7 +259,7 @@ public class StageHandler {
 			}break;
 			case "friend" :{
 				if(CouponWarehouse.isCampaignStarted()){
-					//if(currentUser.registerTime after compaign starting time)
+					//if(currentUser.registerTime after compaign starting time
 					replymsg = "This is your code for campaign:"
 				 		+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
 			 	}
@@ -1205,18 +1207,15 @@ public class StageHandler {
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
-			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
-				else replymsg = "@@" + "nowhere";
+			  replymsg += "@@" + newCoupon.getCoupon();
+			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@"+newCoupon.getInviter();
+				else replymsg += "@@" + "-1"; // dummy representation for not sending
 
-			 	replymsg += "@@" + newCoupon.getInvitee() +"@@" + newCoupon.getCoupon();
+			 	replymsg += "@@" + newCoupon.getInvitee();
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 									log.info(replymsg);
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-				//}
-				//else
 
-				//	replymsg = newCoupon.getCoupon();
-					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used. (You can not get coupon by the code issued to yourself)";
