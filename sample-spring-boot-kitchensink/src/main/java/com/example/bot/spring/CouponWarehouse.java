@@ -146,6 +146,12 @@ public class CouponWarehouse{
     return msg;
   }
   /**
+  * Set campaign condition to false
+  */
+  static public void closeCampaign(){
+    started = false;
+  }
+  /**
   * Add a user into observer List.
   * @param obj User as observer
   */
@@ -220,6 +226,7 @@ public class CouponWarehouse{
       }
      return null;
     }
+    else{closeCampaign();}
     return null;
   }
   /**
